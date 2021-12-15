@@ -8,8 +8,8 @@ aws-s3-kafka:
       bucket-name: petproject-cars-s3-bucket-2021
       credentials:
         region: eu-north-1
-        access-key: AKIAWJSX4WDT5C5G7RWI
-        secret-key: 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
+        access-key:
+        secret-key: 
   kafka:
     bootstrap-servers: 127.0.0.1:9092
     key-serializer: org.apache.kafka.common.serialization.StringSerializer
