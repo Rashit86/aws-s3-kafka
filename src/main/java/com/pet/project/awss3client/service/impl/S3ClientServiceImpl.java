@@ -11,7 +11,10 @@ import com.pet.project.awss3client.service.api.S3ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,19 +41,19 @@ public class S3ClientServiceImpl implements S3ClientService {
     private static Map<String, Date> cars = new ConcurrentHashMap<>();
 
     @Override
-    public List<S3Object> getS3Objects() {
+    public List<String> getJsonS3Objects() throws IOException {
 
-        List<S3Object> s3Objects = new ArrayList<>();
+        List<String> jsonS3Objects = new ArrayList<>();
         for (String key : getS3ObjectKeys()) {
             S3Object s3Object = getS3Object(key);
             Date lastModified = s3Object.getObjectMetadata().getLastModified();
 
             if (!cars.containsKey(key) || (cars.containsKey(key) && !cars.get(key).equals(lastModified))) {
                 cars.put(key, lastModified);
-                s3Objects.add(s3Object);
+                jsonS3Objects.add(StreamUtils.copyToString(s3Object.getObjectContent(), StandardCharsets.UTF_8));
             }
         }
-        return s3Objects;
+        return jsonS3Objects;
     }
 
     private List<String> getS3ObjectKeys() {
