@@ -1,5 +1,8 @@
 package com.pet.project.awss3client.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pet.project.awss3client.dto.CarDto;
 import com.pet.project.awss3client.service.api.KafkaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +14,6 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -20,6 +22,7 @@ import java.util.Map;
 public class KafkaServiceImpl implements KafkaService {
 
     private static final Logger logger = LoggerFactory.getLogger(KafkaServiceImpl.class);
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${aws-s3-kafka.kafka.bootstrap-servers}")
     private String bootstrapServers;
@@ -34,16 +37,16 @@ public class KafkaServiceImpl implements KafkaService {
     private String topicName;
 
     @Override
-    public void sendToTopic(String json) {
+    public void sendToTopic(String json) throws JsonProcessingException {
         logger.info("Sending json = '{}' to topic = '{}'", json, topicName);
-        getKafkaTemplate().send(topicName, json);
+        getKafkaTemplate().send(topicName, objectMapper.readValue(json, CarDto.class).getCarModel(), json);
     }
 
     private KafkaTemplate<String, String> getKafkaTemplate() {
-        Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerializer);
-        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer);
-        return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(configProps));
+        return new KafkaTemplate<>(
+                new DefaultKafkaProducerFactory<>(
+                        Map.of(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
+                                ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerializer,
+                                ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer)));
     }
 }

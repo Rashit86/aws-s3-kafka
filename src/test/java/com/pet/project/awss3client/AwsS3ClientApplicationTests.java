@@ -38,7 +38,7 @@ class AwsS3ClientApplicationTests {
     @Test
     void givenEmbeddedKafkaBroker_whenSending_thenMessageReceived() throws Exception {
 
-        Mockito.when(s3ClientService.getJsonS3Objects()).thenReturn(List.of("simple json"));
+        Mockito.when(s3ClientService.getJsonS3Objects()).thenReturn(List.of("{\"carModel\" : \"carModel\"}"));
         s3KafkaService.unloadToKafka();
 
         CountDownLatch latch = consumer.getLatch();

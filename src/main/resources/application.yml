@@ -9,11 +9,11 @@ aws-s3-kafka:
       credentials:
         region: eu-north-1
         access-key:
-        secret-key: 
+        secret-key:
   kafka:
     bootstrap-servers: 127.0.0.1:9092
     key-serializer: org.apache.kafka.common.serialization.StringSerializer
     value-serializer: org.apache.kafka.common.serialization.StringSerializer
     topic-name: s3_car_topic
   profile:
-    cron: '* 0/10 * * * *'
+    cron: '0 0/30 * * * *'
