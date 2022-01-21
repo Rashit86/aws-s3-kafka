@@ -8,7 +8,7 @@ aws-s3-kafka:
       bucket-name: petproject-cars-s3-bucket-2021
       credentials:
         region: eu-north-1
-        access-key:
+        access-key: 
         secret-key:
   kafka:
     bootstrap-servers: 127.0.0.1:9092
@@ -16,4 +16,4 @@ aws-s3-kafka:
     value-serializer: org.apache.kafka.common.serialization.StringSerializer
     topic-name: s3_car_topic
   profile:
-    cron: '0 0/30 * * * *'
+    cron: '* 0/30 * * * *'
