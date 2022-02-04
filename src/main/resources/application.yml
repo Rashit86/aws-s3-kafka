@@ -18,7 +18,7 @@ aws-s3-kafka:
       bucket-name: petproject-cars-s3-bucket-2021
       credentials:
         region: eu-north-1
-        access-key: AKIAWJSX4WDTSBZBLYJG
-        secret-key: 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
+        access-key:
+        secret-key: 
   profile:
     cron: '* 0/30 * * * *'
