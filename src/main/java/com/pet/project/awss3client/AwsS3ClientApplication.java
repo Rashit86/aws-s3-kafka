@@ -12,8 +12,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class AwsS3ClientApplication {
 
-    @Value("${aws-s3-kafka.kafka.topic-name}")
-    private String topicName;
+    @Value("${aws-s3-kafka.topic-name.s3-car}")
+    private String s3CarTopic;
 
     public static void main(String[] args) {
         SpringApplication.run(AwsS3ClientApplication.class, args);
@@ -22,7 +22,7 @@ public class AwsS3ClientApplication {
     @Bean
     NewTopic createS3CarTopic(){
         return TopicBuilder
-                .name(topicName)
+                .name(s3CarTopic)
                 .partitions(1)
                 //TODO: если ставить больше 1 реплики, то топик не создается.
                 // Видимо потому что у нас создан только один бутстрап сервер

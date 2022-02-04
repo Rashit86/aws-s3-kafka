@@ -1,19 +1,24 @@
 server:
   port: 2224
-  context-path: /api/aws-s3
+  servlet:
+    context-path: /api/aws-s3
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 aws-s3-kafka:
+  topic-name:
+    s3-car: s3_car_topic
   aws:
     s3:
       bucket-name: petproject-cars-s3-bucket-2021
       credentials:
         region: eu-north-1
-        access-key: 
-        secret-key:
-  kafka:
-    bootstrap-servers: 127.0.0.1:9092
-    key-serializer: org.apache.kafka.common.serialization.StringSerializer
-    value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    topic-name: s3_car_topic
+        access-key: AKIAWJSX4WDTSBZBLYJG
+        secret-key: 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
   profile:
     cron: '* 0/30 * * * *'

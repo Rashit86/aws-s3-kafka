@@ -16,7 +16,7 @@ public class KafkaConsumer {
     private CountDownLatch latch = new CountDownLatch(1);
     private String payload = null;
 
-    @KafkaListener(topics = "${aws-s3-kafka.kafka.topic-name}", groupId = "${aws-s3-kafka.kafka.group-id}")
+    @KafkaListener(topics = "${aws-s3-kafka.topic-name.s3-car}", groupId = "${aws-s3-kafka.kafka.group-id}")
     public void receive(ConsumerRecord<?, ?> consumerRecord) {
         LOGGER.info("received payload='{}'", consumerRecord.toString());
         setPayload(consumerRecord.toString());
