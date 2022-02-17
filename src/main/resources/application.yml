@@ -20,5 +20,16 @@ aws-s3-kafka:
         region: eu-north-1
         access-key:
         secret-key: 
+  base-package: com.pet.project.awss3client
+
   profile:
     cron: '* 0/30 * * * *'
+
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-uri: http://localhost:2227/oauth/token_key
+    client:
+      client-id: s3ToKafkaClient
+      client-secret: s3ToKafkaSecret
