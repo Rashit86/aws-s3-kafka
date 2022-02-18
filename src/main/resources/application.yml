@@ -19,7 +19,7 @@ aws-s3-kafka:
       credentials:
         region: eu-north-1
         access-key:
-        secret-key: 
+        secret-key:
   base-package: com.pet.project.awss3client
 
   profile:

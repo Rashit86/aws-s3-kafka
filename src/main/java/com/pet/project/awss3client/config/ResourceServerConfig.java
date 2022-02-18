@@ -9,10 +9,12 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
+    private static final String SWAGGER_ANT_PATTERN = "/api/aws-s3/swagger-ui";
+
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/api/aws-s3/swagger-ui").authenticated();
+                .antMatchers(SWAGGER_ANT_PATTERN).authenticated();
     }
 }
