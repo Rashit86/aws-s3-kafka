@@ -1,7 +1,11 @@
 aws-s3-kafka:
-  topic-name:
-    s3-car: embedded-test-topic
   kafka:
     auto-offset-reset: earliest
     group-id: test
+
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-value: value
 

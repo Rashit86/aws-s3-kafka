@@ -7,9 +7,11 @@ import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -24,6 +26,7 @@ import static org.hamcrest.Matchers.equalTo;
 @DirtiesContext
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
 @ActiveProfiles("test")
+@AutoConfigureMockMvc
 class AwsS3ClientApplicationTests {
 
     @Autowired
@@ -36,6 +39,7 @@ class AwsS3ClientApplicationTests {
     private S3ClientService s3ClientService;
 
     @Test
+    @WithMockUser(username = "test", authorities = "write")
     void givenEmbeddedKafkaBroker_whenSending_thenMessageReceived() throws Exception {
 
         Mockito.when(s3ClientService.getJsonS3Objects()).thenReturn(List.of("{\"carModel\" : \"carModel\"}"));
@@ -45,7 +49,7 @@ class AwsS3ClientApplicationTests {
         latch.await(10, TimeUnit.SECONDS);
 
         MatcherAssert.assertThat(consumer.getLatch().getCount(), equalTo(0L));
-        MatcherAssert.assertThat(consumer.getPayload(), containsString("embedded-test-topic"));
+        MatcherAssert.assertThat(consumer.getPayload(), containsString("s3_car_topic"));
     }
 
 }
