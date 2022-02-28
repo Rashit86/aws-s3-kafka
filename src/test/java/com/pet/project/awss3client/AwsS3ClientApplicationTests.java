@@ -7,6 +7,7 @@ import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -29,6 +30,9 @@ import static org.hamcrest.Matchers.equalTo;
 @AutoConfigureMockMvc
 class AwsS3ClientApplicationTests {
 
+    @Value("${aws-s3-kafka.topic-name.s3-car}")
+    private String s3CarTopicName;
+
     @Autowired
     private S3KafkaService s3KafkaService;
 
@@ -40,7 +44,7 @@ class AwsS3ClientApplicationTests {
 
     @Test
     @WithMockUser(username = "test", authorities = "write")
-    void givenEmbeddedKafkaBroker_whenSending_thenMessageReceived() throws Exception {
+    void uploadToKafkaTest() throws Exception {
 
         Mockito.when(s3ClientService.getJsonS3Objects()).thenReturn(List.of("{\"carModel\" : \"carModel\"}"));
         s3KafkaService.unloadToKafka();
@@ -49,7 +53,7 @@ class AwsS3ClientApplicationTests {
         latch.await(10, TimeUnit.SECONDS);
 
         MatcherAssert.assertThat(consumer.getLatch().getCount(), equalTo(0L));
-        MatcherAssert.assertThat(consumer.getPayload(), containsString("s3_car_topic"));
+        MatcherAssert.assertThat(consumer.getPayload(), containsString(s3CarTopicName));
     }
 
 }
